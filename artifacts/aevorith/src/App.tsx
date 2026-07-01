@@ -36,9 +36,6 @@ export default function App() {
               }
             />
 
-            {/* Redirects */}
-            <Route path="/dashboard" element={<Navigate to="/dashboard" replace />} />
-
             {/* 404 */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
