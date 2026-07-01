@@ -1,0 +1,85 @@
+You have already completed a full analysis of the repository.
+
+From this point onward, treat the current repository as the source of truth.
+
+Your mission is to transform this project into a complete, stable, secure, and production-ready application while preserving everything that already exists.
+
+STRICT RULES:
+- DO NOT redesign the UI.
+- DO NOT change the UX or user flow.
+- DO NOT change layouts, colors, typography, spacing, animations, icons, branding, or visual style.
+- DO NOT remove, replace, or rebuild existing working features.
+- DO NOT migrate from Supabase to Clerk, Firebase, Auth0, or any other provider.
+- DO NOT change the existing architecture unless it is absolutely required to fix a real bug.
+- DO NOT create placeholder implementations or fake functionality.
+- Preserve all existing pages, components, routes, branding, and project structure.
+
+AUTHENTICATION:
+Keep the existing Supabase authentication.
+If authentication is failing because of missing environment variables or Supabase configuration, do NOT replace Supabase. Instead, identify the missing configuration and tell me exactly what is required.
+
+YOUR RESPONSIBILITIES:
+- Fix every runtime error.
+- Fix every console error.
+- Fix every network error.
+- Fix registration.
+- Fix login.
+- Fix logout.
+- Fix password reset (if intended).
+- Fix session persistence.
+- Fix protected routes.
+- Fix API calls.
+- Fix database connectivity.
+- Fix loading states.
+- Fix routing issues.
+- Fix state management issues.
+- Fix TypeScript errors.
+- Fix build errors.
+- Fix production issues.
+- Fix security issues where appropriate.
+- Improve performance where possible without changing the existing behavior.
+
+ALSO COMPLETE EVERYTHING THAT IS MISSING:
+- Complete unfinished pages.
+- Complete incomplete features.
+- Connect any UI that is not connected to the backend.
+- Complete missing CRUD operations.
+- Complete dashboards.
+- Complete profile/account functionality.
+- Complete notifications if planned.
+- Complete file/image upload if planned.
+- Complete AI features that were planned.
+- Complete database integration.
+- Complete validation and error handling.
+- Complete responsive behavior where incomplete.
+- Finish every planned feature that already belongs to this project.
+
+IMPORTANT:
+Before changing any code, determine whether the issue is caused by:
+- Missing environment variables.
+- Missing Supabase configuration.
+- Missing database objects or policies.
+- Missing secrets.
+- Incorrect code.
+
+Only modify code when configuration is not the root cause.
+
+Never replace working code just because you prefer another implementation.
+
+After every fix, verify that nothing else has been broken.
+
+When finished:
+1. Verify the application builds successfully.
+2. Verify every page loads correctly.
+3. Verify registration works.
+4. Verify login works.
+5. Verify logout works.
+6. Verify protected routes work.
+7. Verify database operations work.
+8. Verify there are no runtime errors.
+9. Verify there are no functional regressions.
+10. List every modified file.
+11. Explain the root cause of every issue that was fixed.
+12. If anything cannot be completed because of missing credentials or external configuration, stop and tell me exactly what is missing instead of changing the architecture.
+
+Continue working until the project is fully complete, stable, and production-ready while preserving the existing UI, UX, Supabase integration, branding, architecture, and overall project identity.
