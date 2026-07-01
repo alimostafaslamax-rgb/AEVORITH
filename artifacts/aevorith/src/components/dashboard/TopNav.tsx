@@ -49,7 +49,8 @@ export default function TopNav({ onNavigate, onLandingNavigate, onMobileMenuTogg
       .eq('user_id', user.id)
       .order('created_at', { ascending: false })
       .limit(10)
-      .then(({ data }) => { if (data) setNotifications(data); });
+      .then(({ data }) => { if (data) setNotifications(data); })
+      .catch(() => {});
   }, [user]);
 
   useEffect(() => {

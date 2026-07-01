@@ -1,3 +1,4 @@
+/* @refresh reset */
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import type { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
@@ -61,27 +62,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        (async () => {
-          await fetchProfile(session.user.id);
+    supabase.auth.getSession()
+      .then(({ data, error: _err }) => {
+        const session = data?.session ?? null;
+        setSession(session);
+        setUser(session?.user ?? null);
+        if (session?.user) {
+          fetchProfile(session.user.id).finally(() => setLoading(false));
+        } else {
           setLoading(false);
-        })();
-      } else {
-        setLoading(false);
-      }
-    });
+        }
+      })
+      .catch(() => setLoading(false));
 
     const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          (async () => {
-            await fetchProfile(session.user.id);
-          })();
+          fetchProfile(session.user.id).catch(() => {});
         } else {
           setProfile(null);
           setSubscription(null);

@@ -47,7 +47,10 @@ export default function AIImagePage() {
   const imageModels = AI_MODELS.filter(m => m.category === 'image');
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setLoadingGallery(false);
+      return;
+    }
     supabase
       .from('generations')
       .select('id, title, prompt, model, thumbnail, liked, created_at')
@@ -68,7 +71,8 @@ export default function AIImagePage() {
           })));
         }
         setLoadingGallery(false);
-      });
+      })
+      .catch(() => setLoadingGallery(false));
   }, [user]);
 
   const handleGenerate = async () => {

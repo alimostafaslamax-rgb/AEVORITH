@@ -91,7 +91,10 @@ export default function SettingsPage() {
 
   // Load settings
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setLoadingSettings(false);
+      return;
+    }
     setLoadingSettings(true);
     supabase
       .from('user_settings')
@@ -101,7 +104,8 @@ export default function SettingsPage() {
       .then(({ data }) => {
         if (data) setSettings(data as UserSettings);
         setLoadingSettings(false);
-      });
+      })
+      .catch(() => setLoadingSettings(false));
   }, [user]);
 
   const handleProfileSave = async () => {

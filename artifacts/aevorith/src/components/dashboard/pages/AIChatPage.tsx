@@ -50,7 +50,10 @@ export default function AIChatPage() {
 
   // Load chat sessions
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setLoadingHistory(false);
+      return;
+    }
     supabase
       .from('chats')
       .select('id, title, created_at')
@@ -60,7 +63,8 @@ export default function AIChatPage() {
       .then(({ data }) => {
         if (data) setChatHistory(data);
         setLoadingHistory(false);
-      });
+      })
+      .catch(() => setLoadingHistory(false));
   }, [user]);
 
   const createNewChat = async () => {

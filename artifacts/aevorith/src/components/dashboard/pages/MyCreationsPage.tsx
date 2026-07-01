@@ -30,7 +30,10 @@ export default function MyCreationsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
     supabase
       .from('generations')
       .select('id, type, title, prompt, model, thumbnail, liked, created_at')
@@ -50,7 +53,8 @@ export default function MyCreationsPage() {
           })));
         }
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, [user]);
 
   const filtered = creations.filter(c => {
