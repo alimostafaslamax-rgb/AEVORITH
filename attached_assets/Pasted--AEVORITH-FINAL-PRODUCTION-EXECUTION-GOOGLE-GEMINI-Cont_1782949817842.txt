@@ -1,0 +1,455 @@
+# AEVORITH — FINAL PRODUCTION EXECUTION (GOOGLE GEMINI)
+
+Continue from the last successful checkpoint.
+
+Do NOT restart the repository.
+Do NOT restart the analysis.
+Do NOT re-import the project.
+Continue exactly from where you stopped.
+
+Your objective is to deliver a fully functional, production-ready AI Creative Platform while preserving the current product vision.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROJECT VISION
+
+AEVORITH is intended to become a global AI Creative Platform.
+
+Your responsibility is not only to fix bugs, but to make the existing application stable, secure, scalable and production-ready.
+
+Choose the most stable implementation whenever multiple solutions exist.
+
+Never sacrifice stability for speed.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STRICT RULES
+
+DO NOT redesign UI.
+
+DO NOT redesign UX.
+
+DO NOT modify layouts.
+
+DO NOT modify styling.
+
+DO NOT modify branding.
+
+DO NOT change animations.
+
+DO NOT replace components.
+
+DO NOT remove existing features.
+
+DO NOT introduce unnecessary architecture changes.
+
+Only make functional improvements required to complete the existing project.
+
+Preserve the current user experience exactly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FULL PROJECT AUDIT
+
+Inspect the complete repository.
+
+Review every:
+
+• Page
+• Route
+• Component
+• Hook
+• Context
+• API
+• Fetch request
+• Environment variable
+• Authentication flow
+• Supabase integration
+• Database query
+• Storage bucket
+• Upload flow
+• Protected route
+• Form
+• State flow
+• Async operation
+• Runtime error
+• Console warning
+• Build warning
+• Deployment configuration
+• Production configuration
+
+Continue fixing until the application is completely stable.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXISTING FUNCTIONALITY
+
+Understand every existing feature before changing it.
+
+Never delete functionality unless it is replaced with an equivalent working implementation.
+
+Never remove code simply because it appears unused.
+
+Verify references first.
+
+Preserve frontend behavior.
+
+Preserve routing.
+
+Preserve APIs whenever possible.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+GOOGLE GEMINI MIGRATION
+
+Google Gemini is the primary AI provider for this production release.
+
+Inspect the repository for every dependency related to OpenAI.
+
+If OpenAI exists:
+
+Safely migrate every existing implementation to Google Gemini.
+
+Replace SDKs.
+
+Replace API calls.
+
+Replace helper functions.
+
+Replace configuration.
+
+Replace environment variables.
+
+Replace server integrations.
+
+Remove obsolete OpenAI code only after the Gemini implementation has been fully verified.
+
+Never expose GEMINI_API_KEY.
+
+Use environment variables only.
+
+Never hardcode secrets.
+
+Keep all AI requests server-side.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AI FEATURES
+
+Complete every AI feature that already exists.
+
+Do NOT invent unrelated features.
+
+Do NOT redesign pages.
+
+Complete only the intended functionality.
+
+Verify:
+
+• AI Chat
+• Prompt Processing
+• Conversation History (if implemented)
+• AI Image Generation (if implemented)
+• Image Analysis (if implemented)
+• OCR (if implemented)
+• Translation (if implemented)
+• Streaming (if implemented)
+• Loading states
+• Error handling
+• Retry logic
+• Timeout handling
+• Validation
+• Security
+
+Remove:
+
+• Mock responses
+• Placeholder implementations
+• Temporary stubs
+
+Replace them with real Gemini functionality.
+
+If an existing AI page depends on a capability not currently provided by Gemini, preserve the page, keep the UI unchanged, prevent runtime failures, and clearly document what additional provider would be required later. Do not fake responses.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUTHENTICATION
+
+Verify and repair:
+
+Registration
+
+Login
+
+Logout
+
+Forgot Password
+
+Email Verification
+
+Session Persistence
+
+Refresh Tokens
+
+Protected Routes
+
+Authorization
+
+Supabase Auth
+
+Roles (if implemented)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DATABASE
+
+Verify:
+
+Tables
+
+Relationships
+
+Indexes
+
+Constraints
+
+Queries
+
+Insert
+
+Update
+
+Delete
+
+Permissions
+
+Row Level Security
+
+Storage
+
+Buckets
+
+Storage permissions
+
+Fix every issue.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+APPLICATION
+
+Verify every page.
+
+Verify every route.
+
+Verify every navigation.
+
+Verify every button.
+
+Verify every modal.
+
+Verify every dropdown.
+
+Verify every search.
+
+Verify every filter.
+
+Verify every upload.
+
+Verify every download.
+
+Verify every loading state.
+
+Verify every error state.
+
+Verify every empty state.
+
+Every visible interaction must work correctly.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+NETWORK
+
+Fix:
+
+Failed to fetch
+
+ERR_FAILED
+
+Broken endpoints
+
+Broken API requests
+
+CORS issues
+
+Timeouts
+
+Invalid responses
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PERFORMANCE
+
+Fix:
+
+Memory leaks
+
+Infinite renders
+
+Infinite loading
+
+Duplicate requests
+
+Race conditions
+
+Broken async logic
+
+Optimize only where necessary for production stability.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECURITY
+
+Protect every secret.
+
+Protect GEMINI_API_KEY.
+
+Validate every request.
+
+Validate every response.
+
+Sanitize all inputs.
+
+Prevent unauthorized access.
+
+Ensure production-safe configuration.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DEPLOYMENT
+
+Prepare the application for production.
+
+Verify:
+
+Production Build
+
+Environment Variables
+
+Routing
+
+Authentication
+
+Supabase
+
+Storage
+
+APIs
+
+Gemini Integration
+
+Assets
+
+Deployment configuration
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUALITY ASSURANCE
+
+Before considering the project complete:
+
+Test complete user journeys.
+
+Verify:
+
+Guest user
+
+New registration
+
+Login
+
+Logout
+
+Protected pages
+
+Authenticated navigation
+
+Database read/write
+
+Storage upload/download
+
+AI Chat
+
+AI Image Generation
+
+Image upload
+
+Error handling
+
+Loading states
+
+Production build
+
+Continue fixing until every workflow succeeds.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AUTONOMOUS EXECUTION
+
+Work continuously.
+
+Batch related fixes together.
+
+Do not stop after each issue.
+
+If secrets are required:
+
+Request ALL required environment variables in ONE message.
+
+Do not request them individually.
+
+After they are provided:
+
+Continue automatically until the application is production-ready.
+
+Only stop if blocked by platform restrictions.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL ACCEPTANCE
+
+The application is complete ONLY IF:
+
+✓ Builds successfully
+
+✓ Zero runtime errors
+
+✓ Zero console errors
+
+✓ Zero failed network requests
+
+✓ Zero broken pages
+
+✓ Zero broken routes
+
+✓ Zero broken forms
+
+✓ Zero authentication issues
+
+✓ Zero database issues
+
+✓ Zero storage issues
+
+✓ Zero AI issues
+
+✓ Zero placeholder implementations
+
+✓ Zero mock responses
+
+✓ Every visible feature functions correctly
+
+✓ Production deployment is successful
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+FINAL REPORT
+
+After all work is finished provide:
+
+1. Every issue found.
+2. Root cause of every issue.
+3. Every modified file.
+4. Every required environment variable.
+5. Every authentication fix.
+6. Every database fix.
+7. Every API fix.
+8. Every Gemini migration completed.
+9. Every deployment fix.
+10. Remaining limitations (if any).
+11. Confirmation that the application builds successfully.
+12. Confirmation that every existing feature has been tested.
+13. Confirmation that the application is production-ready.
+
+Do not consider the task complete until every existing feature works correctly without changing the UI or UX.
