@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEVORITH AI STUDIO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #080808;
+            --sidebar-bg: #0a0a0a;
+            --primary-purple: #8b5cf6;
+            --accent-purple: #6d28d9;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --card-bg: #111111;
+            --border-color: #1f1f1f;
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 24px 30px;
+        }
+
+        .logo h1 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            letter-spacing: 1px;
+        }
+
+        .logo p {
+            font-size: 10px;
+            color: var(--text-gray);
+            letter-spacing: 2px;
+            margin-top: -4px;
+        }
+
+        .nav-list {
+            list-style: none;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            padding: 2px 12px;
+            margin-bottom: 4px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link i {
+            margin-right: 12px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-link:hover, .nav-item.active .nav-link {
+            background-color: rgba(139, 92, 246, 0.1);
+            color: var(--text-white);
+        }
+
+        .nav-item.active .nav-link {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0.0) 100%);
+            border-left: 4px solid var(--primary-purple);
+            border-radius: 4px;
+            color: var(--text-white);
+        }
+
+        .credits-card {
+            margin: auto 20px 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .credits-title {
+            font-size: 11px;
+            color: #d8b4fe;
+            margin-bottom: 6px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .credits-value {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .credits-value i {
+            color: #fbbf24;
+            margin-right: 6px;
+            font-size: 14px;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            position: relative;
+            transition: background 0.2s;
+        }
+
+        .upgrade-btn:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-profile {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #333;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details h4 {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        .logout-section {
+            padding: 10px 24px;
+        }
+
+        .logout-link {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-link i {
+            margin-right: 10px;
+        }
+
+        /* Main Content */
+        .main-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Header */
+        header {
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(8, 8, 8, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 90;
+        }
+
+        .search-bar {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            width: 500px;
+            border: 1px solid var(--border-color);
+        }
+
+        .search-bar i {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--text-white);
+            font-size: 14px;
+            width: 100%;
+            outline: none;
+        }
+
+        .search-bar .ctrl-k {
+            font-size: 10px;
+            color: var(--text-gray);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .create-header-btn {
+            background-color: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notification-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            cursor: pointer;
+        }
+
+        .profile-img-header {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #333;
+            overflow: hidden;
+            border: 2px solid var(--primary-purple);
+        }
+
+        .profile-img-header img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Landing View (Home) */
+        #home-view {
+            padding-bottom: 60px;
+        }
+
+        .hero-section {
+            height: calc(100vh - var(--header-height) - 300px);
+            min-height: 600px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+            background-image: url('https://cdn.screenshottocode.com/fcet8hDgCBcszft7-A57_.jpg');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero-bg-text {
+            display: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 5;
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-title {
+            font-size: 52px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .hero-subtitle {
+            font-size: 52px;
+            font-weight: 800;
+            color: var(--primary-purple);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-gray);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-primary-glow {
+            background: var(--primary-purple);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-explore {
+            padding: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary-purple);
+        }
+
+        .view-all {
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/10;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-purple);
+        }
+
+        .feature-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .feature-card-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        }
+
+        .feature-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .feature-card-desc {
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        /* Dashboard View (Create) */
+        #dashboard-view {
+            padding: 20px 40px 60px;
+            display: none;
+        }
+
+        .create-banner {
+            width: 100%;
+            height: 320px;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+            background: #111;
+        }
+
+        .create-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: right top;
+            opacity: 0.8;
+        }
+
+        .create-banner-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(90deg, rgba(8, 8, 8, 0.9) 30%, transparent 100%);
+        }
+
+        .create-banner-title {
+            font-size: 44px;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .create-banner-title span {
+            color: var(--primary-purple);
+        }
+
+        .create-banner-desc {
+            font-size: 16px;
+            color: var(--text-gray);
+            margin-bottom: 32px;
+            max-width: 450px;
+        }
+
+        .prompt-box {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 6px 6px 6px 20px;
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+        }
+
+        .prompt-box i.fa-magic {
+            color: var(--text-gray);
+            margin-right: 12px;
+        }
+
+        .prompt-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            flex-grow: 1;
+            padding: 10px 0;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .prompt-box .tune-btn {
+            padding: 10px;
+            color: var(--text-gray);
+            cursor: pointer;
+        }
+
+        .generate-btn {
+            background: var(--primary-purple);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .tool-chips {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .tool-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tool-chip i {
+            color: var(--primary-purple);
+            font-size: 12px;
+        }
+
+        .tool-chip:hover {
+            background: rgba(139, 92, 246, 0.1);
+            border-color: var(--primary-purple);
+        }
+
+        .icon-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .icon-nav-item {
+            min-width: 80px;
+            height: 80px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-nav-item.active {
+            border-color: var(--primary-purple);
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .icon-nav-item i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+        }
+
+        .icon-nav-item.active i {
+            color: var(--primary-purple);
+        }
+
+        .icon-nav-item span {
+            font-size: 12px;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+
+        .icon-nav-item.active span {
+            color: var(--text-white);
+        }
+
+        .icon-nav-item.has-badge {
+            position: relative;
+        }
+
+        .icon-nav-item .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--primary-purple);
+            color: white;
+            font-size: 9px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .creations-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .creation-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .creation-thumb {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .creation-info {
+            padding: 12px;
+        }
+
+        .creation-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .creation-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .creation-user {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .creation-user-avatar {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .creation-user-name {
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        .creation-stats {
+            display: flex;
+            gap: 10px;
+            color: var(--text-gray);
+            font-size: 11px;
+        }
+
+        .creation-stats span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .filter-tab {
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-gray);
+        }
+
+        .filter-tab.active {
+            background: var(--primary-purple);
+            color: white;
+        }
+
+        /* Responsive Adjustments (Desktop Focused but helpful) */
+        @media (max-width: 1400px) {
+            .feature-grid { grid-template-columns: repeat(3, 1fr); }
+            .creations-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <h1>AEVORITH</h1>
+            <p>AI STUDIO</p>
+        </div>
+
+        <ul class="nav-list">
+            <li class="nav-item active" onclick="showView('home')">
+                <a href="#" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li class="nav-item" onclick="showView('dashboard')">
+                <a href="#" class="nav-link"><i class="fas fa-image"></i> AI Image</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-video"></i> AI Video</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="far fa-comment-alt"></i> AI Chat</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-heart"></i> My Creations</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-th-large"></i> Templates</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-tags"></i> Pricing</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-th"></i> Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link"><i class="fas fa-cog"></i> Settings</a>
+            </li>
+        </ul>
+
+        <div class="credits-card">
+            <div class="credits-title">Credits</div>
+                <div class="credits-value"><i class="fas fa-dot-circle" style="color: #fbbf24;"></i> 150</div>
+                <button class="upgrade-btn" style="background-color: var(--primary-purple); border: none;">Upgrade</button>
+        </div>
+
+        <div class="user-profile">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" alt="User">
+                </div>
+                <div class="user-details">
+                    <h4>Ali Slama</h4>
+                    <p>ali@example.com</p>
+                </div>
+            </div>
+            <i class="fas fa-ellipsis-v" style="font-size: 14px; color: var(--text-gray); cursor: pointer;"></i>
+        </div>
+
+        <div class="logout-section">
+            <a href="#" class="logout-link"><i class="fas fa-sign-out-alt"></i> Log out</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Header -->
+        <header>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search anything...">
+                <span class="ctrl-k">Ctrl K</span>
+            </div>
+            <div class="header-actions">
+                <button class="create-header-btn" onclick="showView('dashboard')">
+                    <i class="fas fa-plus-circle"></i> Create New
+                </button>
+                <div class="notification-btn">
+                    <i class="far fa-bell"></i>
+                </div>
+                <div class="profile-img-header">
+                    <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" alt="Profile">
+                </div>
+            </div>
+        </header>
+
+        <!-- Home View -->
+        <div id="home-view">
+            <div class="hero-section">
+                <img src="https://cdn.screenshottocode.com/13qYvdCIs8xXKnSsaR_GI.png" class="hero-bg-text" alt="Hero Background">
+                <div class="hero-content">
+                    <div class="hero-badge">🚀 Next-Gen AI Platform</div>
+                    <h1 class="hero-title">The Creator-First</h1>
+                    <h2 class="hero-subtitle">Generative AI Platform</h2>
+                    <p class="hero-desc">Create images, videos, and chat with AI using the most powerful models, all in one place.</p>
+                    <div class="hero-btns">
+                        <button class="btn-primary-glow" onclick="showView('dashboard')"><i class="fas fa-sparkles"></i> Start Creating</button>
+                        <button class="btn-outline"><i class="fas fa-cubes"></i> Explore Tools</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feature-explore">
+                <div class="section-header">
+                    <div class="section-title"><i class="fas fa-sparkles"></i> Explore what you can create</div>
+                    <a href="#" class="view-all">View all <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <img src="https://cdn.screenshottocode.com/v8K1RZz9gJXRUgou5atwF.png" alt="AI Images">
+                        <div class="feature-card-content">
+                            <div class="feature-card-title">AI Images</div>
+                            <div class="feature-card-desc">Turn text into stunning visuals</div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <img src="https://cdn.screenshottocode.com/JcEJUpsdrCW1piPOkEq2P.png" alt="AI Videos">
+                        <div class="feature-card-content">
+                            <div class="feature-card-title">AI Videos</div>
+                            <div class="feature-card-desc">Generate cinematic videos</div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <img src="https://cdn.screenshottocode.com/ecBV4eD9pVJ80S_Rh7Lkh.png" alt="AI Chat">
+                        <div class="feature-card-content">
+                            <div class="feature-card-title">AI Chat</div>
+                            <div class="feature-card-desc">Chat with advanced AI</div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <img src="https://cdn.screenshottocode.com/y6qh3TV4aE54cubXbn-vl.png" alt="Templates">
+                        <div class="feature-card-content">
+                            <div class="feature-card-title">Templates</div>
+                            <div class="feature-card-desc">Use professional templates</div>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <img src="https://cdn.screenshottocode.com/xvE23e8PXKY9LUaVdpDfD.png" alt="My Creations">
+                        <div class="feature-card-content">
+                            <div class="feature-card-title">My Creations</div>
+                            <div class="feature-card-desc">View your AI creations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view">
+            <div class="create-banner">
+                <img src="https://cdn.screenshottocode.com/Q0W3zOAxhZvD1clqUtXy4.png" class="create-banner-img" alt="Banner">
+                <div class="create-banner-content">
+                    <h1 class="create-banner-title">What will you <span>create</span> today?</h1>
+                    <p class="create-banner-desc">Generate stunning images, videos, and more with the power of AI.</p>
+                    <div class="prompt-box">
+                        <i class="far fa-image"></i>
+                        <input type="text" placeholder="Type a prompt...">
+                        <div class="tune-btn"><i class="fas fa-sliders-h"></i></div>
+                        <button class="generate-btn"><i class="fas fa-sparkles"></i> Generate</button>
+                    </div>
+                    <div class="tool-chips">
+                        <div class="tool-chip"><i class="fas fa-magic"></i> Smart Enhance</div>
+                        <div class="tool-chip"><i class="fas fa-star"></i> High Quality</div>
+                        <div class="tool-chip"><i class="fas fa-film"></i> Cinematic</div>
+                        <div class="tool-chip"><i class="fas fa-paint-brush"></i> Digital Art</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="icon-nav">
+                <div class="icon-nav-item active">
+                    <i class="far fa-image"></i>
+                    <span>Image</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="fas fa-video"></i>
+                    <span>Video</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="far fa-comment-alt"></i>
+                    <span>AI Chat</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="fas fa-cube"></i>
+                    <span>3D</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="fas fa-scroll"></i>
+                    <span>Blueprints</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="fas fa-stream"></i>
+                    <span>Flow State</span>
+                </div>
+                <div class="icon-nav-item">
+                    <i class="fas fa-expand-alt"></i>
+                    <span>Upscaler</span>
+                </div>
+                <div class="icon-nav-item has-badge">
+                    <div class="badge">New</div>
+                    <i class="fas fa-edit"></i>
+                    <span>Draw</span>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title">Featured Creations</div>
+                <a href="#" class="view-all">View all <i class="fas fa-chevron-right" style="font-size: 10px;"></i></a>
+            </div>
+
+            <div class="creations-grid">
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/-WtyX-8wXomqNA5hjHaf6.png" class="creation-thumb" alt="Cyberpunk City">
+                    <div class="creation-info">
+                        <div class="creation-title">Cyberpunk City</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">NeonDreamer</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 2.4K</span>
+                                <span><i class="far fa-eye"></i> 12K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/3cTOhsX4TEtj3Yw0RwxUX.png" class="creation-thumb" alt="Astronaut in Space">
+                    <div class="creation-info">
+                        <div class="creation-title">Astronaut in Space</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">StarGazer</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 1.8K</span>
+                                <span><i class="far fa-eye"></i> 8.7K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/3zEQ0dXCi2uGCcUQDPV2N.png" class="creation-thumb" alt="Fantasy Castle">
+                    <div class="creation-info">
+                        <div class="creation-title">Fantasy Castle</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">MythicArt</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 3.2K</span>
+                                <span><i class="far fa-eye"></i> 15K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/lZ69jvZ8i_EQKAbe-NuGI.png" class="creation-thumb" alt="AI Portrait">
+                    <div class="creation-info">
+                        <div class="creation-title">AI Portrait</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">DigitalSoul</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 2.1K</span>
+                                <span><i class="far fa-eye"></i> 10K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/hSNqnhs7XL_fTEe5CJftt.png" class="creation-thumb" alt="Neon Samurai">
+                    <div class="creation-info">
+                        <div class="creation-title">Neon Samurai</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">ShogunAI</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 1.6K</span>
+                                <span><i class="far fa-eye"></i> 7.2K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/o2beYZtDRviAE_TKTtVey.png" class="creation-thumb" alt="Majestic Tiger">
+                    <div class="creation-info">
+                        <div class="creation-title">Majestic Tiger</div>
+                        <div class="creation-meta">
+                            <div class="creation-user">
+                                <img src="https://cdn.screenshottocode.com/bcWWxS3YNM4KDf6X3A5J0.png" class="creation-user-avatar" alt="User">
+                                <span class="creation-user-name">WildLens</span>
+                            </div>
+                            <div class="creation-stats">
+                                <span><i class="far fa-heart"></i> 2.9K</span>
+                                <span><i class="far fa-eye"></i> 11K</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <div class="section-title" style="display: flex; gap: 20px; align-items: center;">
+                    Your Creations
+                    <div class="filter-tabs">
+                        <div class="filter-tab active">All</div>
+                        <div class="filter-tab">Images</div>
+                        <div class="filter-tab">Videos</div>
+                        <div class="filter-tab">3D</div>
+                        <div class="filter-tab">Blueprints</div>
+                    </div>
+                </div>
+                <a href="#" class="view-all">View all <i class="fas fa-chevron-right" style="font-size: 10px;"></i></a>
+            </div>
+
+            <div class="creations-grid">
+                <!-- Sample your creations -->
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/JcEJUpsdrCW1piPOkEq2P.png" class="creation-thumb">
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/xvE23e8PXKY9LUaVdpDfD.png" class="creation-thumb">
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/v8K1RZz9gJXRUgou5atwF.png" class="creation-thumb">
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/ecBV4eD9pVJ80S_Rh7Lkh.png" class="creation-thumb">
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/hSNqnhs7XL_fTEe5CJftt.png" class="creation-thumb">
+                </div>
+                <div class="creation-card">
+                    <img src="https://cdn.screenshottocode.com/Q0W3zOAxhZvD1clqUtXy4.png" class="creation-thumb">
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function showView(viewName) {
+            const homeView = document.getElementById('home-view');
+            const dashboardView = document.getElementById('dashboard-view');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Hide all
+            homeView.style.display = 'none';
+            dashboardView.style.display = 'none';
+            navItems.forEach(item => item.classList.remove('active'));
+
+            // Show selected
+            if (viewName === 'home') {
+                homeView.style.display = 'block';
+                navItems[0].classList.add('active');
+            } else if (viewName === 'dashboard') {
+                dashboardView.style.display = 'block';
+                navItems[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

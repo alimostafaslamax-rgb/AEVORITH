@@ -1,2 +1,0 @@
-- [Gemini AI Integration](gemini-integration.md) — Gemini 2.5-flash is the working model; 2.0-flash and 2.0-flash-lite exhaust free-tier quota fast.
-- [Vite Proxy for API](vite-proxy.md) — Frontend proxies /api to api-server on port 8080 via vite.config.ts server.proxy setting.
