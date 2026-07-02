@@ -31,8 +31,6 @@ const SUGGESTIONS = [
   { icon: Sparkles, label: 'Style suggestions', prompt: 'What art styles work best for creating realistic portraits with AI?' },
 ];
 
-const AI_RESPONSE = "That's a great creative direction! Here are some thoughts:\n\n**Enhanced approach:**\nConsider adding specific lighting details, mood descriptors, and camera angles to make your prompt more vivid. For example, include terms like \"golden hour lighting\", \"dramatic shadows\", or \"cinematic composition\".\n\n**Style tips:**\nFor photorealistic results, add: `8K UHD, photorealistic, sharp focus, detailed textures`\n\nFor artistic styles, specify: `oil painting, watercolor, digital art, concept art`\n\nWould you like me to refine this further?";
-
 export default function AIChatPage() {
   const { user } = useAuth();
   const toast = useToast();
@@ -43,12 +41,12 @@ export default function AIChatPage() {
   const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Load chat sessions
   useEffect(() => {
     if (!user) {
       setLoadingHistory(false);
@@ -111,11 +109,10 @@ export default function AIChatPage() {
   };
 
   const sendMessage = async (content: string) => {
-    if (!content.trim()) return;
+    if (!content.trim() || loading) return;
 
     let chatId = activeChatId;
 
-    // Create a chat session if none active
     if (!chatId && user) {
       const title = content.slice(0, 50) + (content.length > 50 ? '...' : '');
       const { data, error } = await supabase
@@ -130,32 +127,79 @@ export default function AIChatPage() {
     }
 
     const userMsg: Message = { id: Date.now().toString(), role: 'user', content, time: 'Just now' };
-    setMessages(prev => [...prev, userMsg]);
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setInput('');
     setLoading(true);
 
-    // Save user message
     if (chatId) {
-      await supabase.from('chat_messages').insert({ chat_id: chatId, role: 'user', content });
+      supabase.from('chat_messages').insert({ chat_id: chatId, role: 'user', content }).catch(() => {});
     }
 
-    // Simulate AI response
-    setTimeout(async () => {
-      const aiMsg: Message = { id: (Date.now() + 1).toString(), role: 'assistant', content: AI_RESPONSE, time: 'Just now' };
-      setMessages(prev => [...prev, aiMsg]);
-      setLoading(false);
+    const aiMsgId = (Date.now() + 1).toString();
+    setMessages(prev => [...prev, { id: aiMsgId, role: 'assistant', content: '', time: 'Just now' }]);
 
-      // Save AI response
-      if (chatId) {
-        await supabase.from('chat_messages').insert({ chat_id: chatId, role: 'assistant', content: AI_RESPONSE });
-        // Update chat title from first user message
-        if (chatHistory.find(c => c.id === chatId)?.title === 'New Chat') {
+    const apiMessages = updatedMessages
+      .filter(m => m.id !== 'init')
+      .map(m => ({ role: m.role, content: m.content }));
+
+    try {
+      abortRef.current = new AbortController();
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: apiMessages }),
+        signal: abortRef.current.signal,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(err.error ?? 'Request failed');
+      }
+
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          try {
+            const payload = JSON.parse(line.slice(6));
+            if (payload.error) throw new Error(payload.error);
+            if (payload.content) {
+              fullResponse += payload.content;
+              setMessages(prev => prev.map(m =>
+                m.id === aiMsgId ? { ...m, content: fullResponse } : m
+              ));
+            }
+          } catch (_) {}
+        }
+      }
+
+      if (chatId && fullResponse) {
+        supabase.from('chat_messages').insert({ chat_id: chatId, role: 'assistant', content: fullResponse }).catch(() => {});
+        const isNewChat = chatHistory.find(c => c.id === chatId)?.title === 'New Chat';
+        if (isNewChat) {
           const title = content.slice(0, 50) + (content.length > 50 ? '...' : '');
-          await supabase.from('chats').update({ title, updated_at: new Date().toISOString() }).eq('id', chatId);
+          supabase.from('chats').update({ title, updated_at: new Date().toISOString() }).eq('id', chatId).catch(() => {});
           setChatHistory(prev => prev.map(c => c.id === chatId ? { ...c, title } : c));
         }
       }
-    }, 1500);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.name === 'AbortError') return;
+      const msg = err instanceof Error ? err.message : 'Failed to get AI response.';
+      toast.error(msg);
+      setMessages(prev => prev.filter(m => m.id !== aiMsgId));
+    } finally {
+      setLoading(false);
+    }
   };
 
   const relativeTime = (iso: string) => {
@@ -211,16 +255,14 @@ export default function AIChatPage() {
               <Sparkles className="w-4 h-4 text-purple-400" />
               <span className="text-xs font-semibold text-white">AEVO AI</span>
             </div>
-            <p className="text-white/40 text-[11px]">Powered by advanced language models with creative expertise</p>
+            <p className="text-white/40 text-[11px]">Powered by Google Gemini</p>
           </div>
         </div>
       </div>
 
       {/* Main Chat */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {/* Suggestions at start */}
           {messages.length === 1 && (
             <div className="grid grid-cols-2 gap-3 mb-6">
               {SUGGESTIONS.map(s => (
@@ -244,16 +286,24 @@ export default function AIChatPage() {
               </div>
               <div className={`max-w-[75%] ${msg.role === 'user' ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                 <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${msg.role === 'user' ? 'bg-purple-600 text-white rounded-tr-sm' : 'glass text-white/85 rounded-tl-sm'}`}>
-                  {msg.content.split('\n').map((line, i) => (
-                    <span key={i}>
-                      {line.startsWith('**') && line.endsWith('**')
-                        ? <strong className="text-white font-semibold">{line.slice(2, -2)}</strong>
-                        : line}
-                      {i < msg.content.split('\n').length - 1 && <br />}
-                    </span>
-                  ))}
+                  {msg.content === '' && msg.role === 'assistant' ? (
+                    <div className="flex gap-1 items-center h-5">
+                      <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  ) : (
+                    msg.content.split('\n').map((line, i, arr) => (
+                      <span key={i}>
+                        {line.startsWith('**') && line.endsWith('**')
+                          ? <strong className="text-white font-semibold">{line.slice(2, -2)}</strong>
+                          : line}
+                        {i < arr.length - 1 && <br />}
+                      </span>
+                    ))
+                  )}
                 </div>
-                {msg.role === 'assistant' && (
+                {msg.role === 'assistant' && msg.content !== '' && (
                   <div className="flex items-center gap-1 ml-1">
                     <button
                       onClick={() => { navigator.clipboard.writeText(msg.content); }}
@@ -270,20 +320,6 @@ export default function AIChatPage() {
             </div>
           ))}
 
-          {loading && (
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500 to-violet-700 flex items-center justify-center flex-shrink-0">
-                <Sparkles className="w-4 h-4 text-white" />
-              </div>
-              <div className="glass rounded-2xl rounded-tl-sm px-4 py-3">
-                <div className="flex gap-1 items-center h-5">
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
-              </div>
-            </div>
-          )}
           <div ref={bottomRef} />
         </div>
 

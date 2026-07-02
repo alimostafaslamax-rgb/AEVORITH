@@ -19,15 +19,6 @@ const RESOLUTIONS = ['512×512', '768×768', '1024×1024', '1536×1024', '1024×
 const ASPECTS = ['1:1', '16:9', '9:16', '4:3', '3:4', '3:2'];
 const QUALITIES = ['Standard', 'High', 'Ultra'];
 
-const PLACEHOLDER_IMAGES = [
-  'https://images.pexels.com/photos/3075993/pexels-photo-3075993.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1707828/pexels-photo-1707828.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/1103970/pexels-photo-1103970.jpeg?auto=compress&cs=tinysrgb&w=600',
-  'https://images.pexels.com/photos/2693212/pexels-photo-2693212.jpeg?auto=compress&cs=tinysrgb&w=600',
-];
-
 export default function AIImagePage() {
   const { user } = useAuth();
   const toast = useToast();
@@ -80,10 +71,22 @@ export default function AIImagePage() {
     setGenerating(true);
 
     const modelName = imageModels.find(m => m.id === selectedModel)?.name ?? selectedModel;
-    const thumbnailUrl = PLACEHOLDER_IMAGES[Math.floor(Math.random() * PLACEHOLDER_IMAGES.length)];
     const title = prompt.slice(0, 60) + (prompt.length > 60 ? '...' : '');
 
-    setTimeout(async () => {
+    try {
+      const res = await fetch('/api/ai/generate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, style: selectedStyle, model: modelName }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(err.error ?? 'Request failed');
+      }
+
+      const { thumbnail } = await res.json();
+
       const { data, error } = await supabase
         .from('generations')
         .insert({
@@ -91,13 +94,11 @@ export default function AIImagePage() {
           title,
           prompt,
           model: modelName,
-          thumbnail: thumbnailUrl,
+          thumbnail,
           metadata: { style: selectedStyle, resolution: selectedRes, aspect: selectedAspect, quality: selectedQuality, cfg_scale: cfgScale, steps },
         })
         .select('id, title, prompt, model, thumbnail, liked, created_at')
         .single();
-
-      setGenerating(false);
 
       if (error) {
         toast.error('Failed to save generation.');
@@ -116,7 +117,12 @@ export default function AIImagePage() {
         }, ...prev]);
         toast.success('Image generated successfully!');
       }
-    }, 3000);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Failed to generate image.';
+      toast.error(msg);
+    } finally {
+      setGenerating(false);
+    }
   };
 
   const toggleLike = async (id: string, e: React.MouseEvent) => {
@@ -275,7 +281,7 @@ export default function AIImagePage() {
           {/* Generate Button */}
           <button
             onClick={handleGenerate}
-            disabled={generating}
+            disabled={generating || !prompt.trim()}
             className={`w-full btn-primary justify-center py-3.5 text-base rounded-xl ${generating ? 'opacity-75' : 'purple-glow'}`}
           >
             {generating ? (
